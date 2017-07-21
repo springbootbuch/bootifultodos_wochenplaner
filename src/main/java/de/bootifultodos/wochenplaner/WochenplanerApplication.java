@@ -17,6 +17,7 @@ package de.bootifultodos.wochenplaner;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
 /**
@@ -25,6 +26,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 @SuppressWarnings({"checkstyle:designforextension"})
 @SpringBootApplication
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableEurekaClient
 public class WochenplanerApplication {
 
 	public static void main(final String... args) {
