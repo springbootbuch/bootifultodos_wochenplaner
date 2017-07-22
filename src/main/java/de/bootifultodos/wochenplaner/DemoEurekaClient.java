@@ -31,7 +31,7 @@ import org.springframework.web.client.RestTemplate;
  * @author Michael J. Simons, 2017-07-21
  */
 @Component
-@Profile("demo-eurekaclient")
+@Profile("demo")
 @RequiredArgsConstructor
 public final class DemoEurekaClient implements CommandLineRunner {
 
