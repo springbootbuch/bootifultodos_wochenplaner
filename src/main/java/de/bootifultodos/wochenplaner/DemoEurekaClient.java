@@ -41,8 +41,6 @@ public final class DemoEurekaClient implements CommandLineRunner {
 
 	private final EurekaClient eurekaClient;
 
-	private final RestTemplate restTemplate = new RestTemplate();
-
 	@Override
 	public void run(final String... args) throws Exception {
 		String homepageUrl = eurekaClient
@@ -50,9 +48,10 @@ public final class DemoEurekaClient implements CommandLineRunner {
 			.getHomePageUrl();
 		LOG.info("Homepage-URL ist {}", homepageUrl);
 
+		final RestTemplate restTemplate = new RestTemplate();
 		Feiertag[] feiertage = restTemplate.getForEntity(
-			homepageUrl + 
-				"/feiertage/{jahr}/{bundeslandnummer}",
+			homepageUrl
+				+ "/api/feiertage/{jahr}/{bundesland}",
 			Feiertag[].class,
 			LocalDate.now().getYear(),
 			configuration.getBundeslandnummer()
