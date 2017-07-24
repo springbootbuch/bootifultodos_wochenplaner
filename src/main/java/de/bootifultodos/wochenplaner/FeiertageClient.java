@@ -15,7 +15,7 @@
  */
 package de.bootifultodos.wochenplaner;
 
-import de.bootifultodos.wochenplaner.FeiertageClient.DefaultFeiertage;
+import de.bootifultodos.wochenplaner.FeiertageClient.DefaultFeiertageClient;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.cloud.netflix.feign.FeignClient;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  */
 @FeignClient(
 	name = "feiertage",
-	fallback = DefaultFeiertage.class
+	fallback = DefaultFeiertageClient.class
 )
 public interface FeiertageClient {
 	@GetMapping("/api/feiertage/{jahr}/{bundesland}")
@@ -36,10 +36,14 @@ public interface FeiertageClient {
 		@PathVariable int bundesland
 	);
 
-	final class DefaultFeiertage implements FeiertageClient {
+	final class DefaultFeiertageClient 
+		implements FeiertageClient {
 
 		@Override
-		public List<Feiertag> getFeiertage(final int jahr, final int bundesland) {
+		public List<Feiertag> getFeiertage(
+			final int jahr, 
+			final int bundesland
+		) {
 			return new ArrayList<>();
 		}
 	}
