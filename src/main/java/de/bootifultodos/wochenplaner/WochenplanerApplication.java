@@ -17,6 +17,7 @@ package de.bootifultodos.wochenplaner;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -29,9 +30,13 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableDiscoveryClient
 @EnableFeignClients
+@EnableCircuitBreaker
 public class WochenplanerApplication {
-
+	
 	public static void main(final String... args) {
-		SpringApplication.run(WochenplanerApplication.class, args);
+		SpringApplication.run(
+			WochenplanerApplication.class, 
+			args
+		);
 	}
 }
