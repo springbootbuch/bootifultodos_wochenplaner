@@ -13,18 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.bootifultodos.wochenplaner;
+package de.bootifultodos.wochenplaner.demos;
 
-import de.bootifultodos.wochenplaner.FeiertageClient.DefaultFeiertageClient;
+import de.bootifultodos.wochenplaner.Feiertag;
+import de.bootifultodos.wochenplaner.demos.FeiertageClient.DefaultFeiertageClient;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * @author Michael J. Simons, 2017-07-22
  */
+@Profile("demo")
 @FeignClient(
 	name = "feiertage",
 	fallback = DefaultFeiertageClient.class

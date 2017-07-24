@@ -13,8 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.bootifultodos.wochenplaner;
+package de.bootifultodos.wochenplaner.demos;
 
+import com.netflix.discovery.EurekaClient;
+import de.bootifultodos.wochenplaner.Feiertag;
+import de.bootifultodos.wochenplaner.WochenplanerConfiguration;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -27,23 +30,29 @@ import org.springframework.web.client.RestTemplate;
 /**
  * Used only for demonstrating purpose and runs only in profile "demo".
  *
- * @author Michael J. Simons, 2017-07-22
+ * @author Michael J. Simons, 2017-07-21
  */
 @Component
 @Profile("demo")
 @RequiredArgsConstructor
-public final class DemoLoadBalancedRestTemplate implements CommandLineRunner {
+public final class DemoEurekaClient implements CommandLineRunner {
 
-	static final Logger LOG = LoggerFactory.getLogger(DemoLoadBalancedRestTemplate.class);
+	static final Logger LOG = LoggerFactory.getLogger(DemoEurekaClient.class);
 
 	private final WochenplanerConfiguration configuration;
 
-	private final RestTemplate restTemplate;
+	private final EurekaClient eurekaClient;
 
 	@Override
 	public void run(final String... args) throws Exception {
+		String homepageUrl = eurekaClient
+			.getNextServerFromEureka("feiertage", false)
+			.getHomePageUrl();
+		LOG.info("Homepage-URL ist {}", homepageUrl);
+
+		final RestTemplate restTemplate = new RestTemplate();
 		Feiertag[] feiertage = restTemplate.getForEntity(
-			"http://feiertage"
+			homepageUrl
 				+ "/api/feiertage/{jahr}/{bundesland}",
 			Feiertag[].class,
 			LocalDate.now().getYear(),

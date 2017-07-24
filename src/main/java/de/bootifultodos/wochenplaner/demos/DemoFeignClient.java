@@ -13,55 +13,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.bootifultodos.wochenplaner;
+package de.bootifultodos.wochenplaner.demos;
 
-import com.netflix.discovery.EurekaClient;
+import de.bootifultodos.wochenplaner.Feiertag;
+import de.bootifultodos.wochenplaner.WochenplanerConfiguration;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * Used only for demonstrating purpose and runs only in profile "demo".
  *
- * @author Michael J. Simons, 2017-07-21
+ * @author Michael J. Simons, 2017-07-22
  */
 @Component
 @Profile("demo")
 @RequiredArgsConstructor
-public final class DemoEurekaClient implements CommandLineRunner {
+public final class DemoFeignClient implements CommandLineRunner {
 
-	static final Logger LOG = LoggerFactory.getLogger(DemoEurekaClient.class);
+	static final Logger LOG = LoggerFactory.getLogger(DemoFeignClient.class);
 
 	private final WochenplanerConfiguration configuration;
 
-	private final EurekaClient eurekaClient;
+	private final FeiertageClient feiertageClient;
 
 	@Override
 	public void run(final String... args) throws Exception {
-		String homepageUrl = eurekaClient
-			.getNextServerFromEureka("feiertage", false)
-			.getHomePageUrl();
-		LOG.info("Homepage-URL ist {}", homepageUrl);
-
-		final RestTemplate restTemplate = new RestTemplate();
-		Feiertag[] feiertage = restTemplate.getForEntity(
-			homepageUrl
-				+ "/api/feiertage/{jahr}/{bundesland}",
-			Feiertag[].class,
+		List<Feiertag> feiertage = feiertageClient.getFeiertage(
 			LocalDate.now().getYear(),
 			configuration.getBundeslandnummer()
-		).getBody();
+		);
 
-		for (Feiertag feiertag : feiertage) {
+		feiertage.forEach(feiertag -> {
 			LOG.info("{} ist ein Feiertag: {}",
 				feiertag.getDatum(),
 				feiertag.getName()
 			);
-		}
+		});
 	}
 }

@@ -13,8 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.bootifultodos.wochenplaner;
+package de.bootifultodos.wochenplaner.demos;
 
+import de.bootifultodos.wochenplaner.Feiertag;
+import de.bootifultodos.wochenplaner.FeiertageService;
+import de.bootifultodos.wochenplaner.WochenplanerConfiguration;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -25,27 +28,26 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 /**
- * Used only for demonstrating purpose and runs only in profile "demo".
  *
- * @author Michael J. Simons, 2017-07-22
+ * @author Michael J. Simons, 2017-07-24
  */
 @Component
 @Profile("demo")
 @RequiredArgsConstructor
-public final class DemoFeignClient implements CommandLineRunner {
+public final class DemoHystrixCircuitBreaker implements CommandLineRunner {
 
-	static final Logger LOG = LoggerFactory.getLogger(DemoFeignClient.class);
+	static final Logger LOG = LoggerFactory.getLogger(DemoHystrixCircuitBreaker.class);
 
 	private final WochenplanerConfiguration configuration;
 
-	private final FeiertageClient feiertageClient;
+	private final FeiertageService feiertageService;
 
 	@Override
 	public void run(final String... args) throws Exception {
-		List<Feiertag> feiertage = feiertageClient.getFeiertage(
-			LocalDate.now().getYear(),
-			configuration.getBundeslandnummer()
-		);
+		List<Feiertag> feiertage;
+		feiertage = this.feiertageService
+			.getFeiertage(LocalDate.now().getYear(),
+				configuration.getBundeslandnummer());
 
 		feiertage.forEach(feiertag -> {
 			LOG.info("{} ist ein Feiertag: {}",
