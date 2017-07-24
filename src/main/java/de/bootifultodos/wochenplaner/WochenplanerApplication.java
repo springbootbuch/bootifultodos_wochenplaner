@@ -32,10 +32,10 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 @EnableFeignClients
 @EnableCircuitBreaker
 public class WochenplanerApplication {
-	
+
 	public static void main(final String... args) {
 		SpringApplication.run(
-			WochenplanerApplication.class, 
+			WochenplanerApplication.class,
 			args
 		);
 	}

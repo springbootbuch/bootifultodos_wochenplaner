@@ -36,7 +36,7 @@ import org.springframework.web.client.RestTemplate;
  */
 @Configuration
 @Profile("demo")
-public class DemoHystrixCircuitBreaker {
+public final class DemoHystrixCircuitBreaker {
 
 	static final Logger LOG = LoggerFactory.getLogger(DemoHystrixCircuitBreaker.class);
 
@@ -51,17 +51,18 @@ public class DemoHystrixCircuitBreaker {
 	}
 }
 
+@SuppressWarnings({"checkstyle:designforextension"})
 class FeiertageService {
 
 	private final RestTemplate restTemplate;
 
-	public FeiertageService(RestTemplate restTemplate) {
+	FeiertageService(final RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
 	}
 
 	@HystrixCommand(fallbackMethod = "defaultFeiertage")
 	public List<Feiertag> getFeiertage(
-		int jahr, int bundesland
+		final int jahr, final int bundesland
 	) {
 		if (jahr == 2005) {
 			throw new RuntimeException("Random error");
@@ -78,7 +79,7 @@ class FeiertageService {
 	}
 
 	private List<Feiertag> defaultFeiertage(
-		int jahr, int bundesland
+		final int jahr, final int bundesland
 	) {
 		return new ArrayList<>();
 	}
@@ -92,7 +93,7 @@ class DemoCommandLineRunner implements CommandLineRunner {
 	private final FeiertageService feiertageService;
 
 	@Override
-	public void run(String... args) throws Exception {
+	public void run(final String... args) throws Exception {
 		List<Feiertag> feiertage;
 		feiertage = this.feiertageService
 			.getFeiertage(LocalDate.now().getYear(),
@@ -105,9 +106,14 @@ class DemoCommandLineRunner implements CommandLineRunner {
 			);
 		});
 
-		for (int i = 0; i < 20; ++i) {
-			feiertage = this.feiertageService
-				.getFeiertage(2005, configuration.getBundeslandnummer());
-		}
+		feiertage = this.feiertageService
+			.getFeiertage(2005, configuration.getBundeslandnummer());
+
+		feiertage.forEach(feiertag -> {
+			LOG.info("{} ist ein Feiertag: {}",
+				feiertag.getDatum(),
+				feiertag.getName()
+			);
+		});
 	}
 }

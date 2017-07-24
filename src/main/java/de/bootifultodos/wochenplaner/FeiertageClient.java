@@ -36,12 +36,12 @@ public interface FeiertageClient {
 		@PathVariable int bundesland
 	);
 
-	final class DefaultFeiertageClient 
+	final class DefaultFeiertageClient
 		implements FeiertageClient {
 
 		@Override
 		public List<Feiertag> getFeiertage(
-			final int jahr, 
+			final int jahr,
 			final int bundesland
 		) {
 			return new ArrayList<>();
