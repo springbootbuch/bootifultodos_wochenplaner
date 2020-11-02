@@ -51,3 +51,9 @@ gradle-app.setting
 
 tc/
 logs/
+
+### Eclipse ###
+.classpath
+.project
+.settings/
+.factorypath
